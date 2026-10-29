@@ -931,10 +931,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88acaed60443541a9875177eed731966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingObjectSpawn
-  _fallingObject:
+  _fallingObjectPrefabs:
   - {fileID: 1625773167192285874, guid: 597e95ea8f3ae4b1096524fc9759485e, type: 3}
   - {fileID: 2390375647169418919, guid: dd229454b7b604f26818e3a92f25a471, type: 3}
   - {fileID: 5114392090763184494, guid: ae9a0571ab93a4dd9acefb6cd5ba66fd, type: 3}
+  _spawnInterval: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
