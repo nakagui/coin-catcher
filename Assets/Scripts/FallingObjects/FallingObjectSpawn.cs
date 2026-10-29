@@ -1,29 +1,44 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FallingObjectSpawn : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _fallingObject;
+    [SerializeField] private float _spawnInterval = 1f;
     private float _minX;
     private float _maxX;
 
     private void Start()
     {
-        Spawn();
+        StartCoroutine(SpawnRoutine());
+    }
+
+    private IEnumerator SpawnRoutine()
+    {
+        while (true)
+        {
+            Spawn();
+            yield return new WaitForSeconds(_spawnInterval);
+        }
     }
 
     private void Spawn()
     {
         Camera mainCamera = Camera.main;
         (_minX, _maxX) = GetHorizontalBounds(mainCamera);
-        foreach (var item in _fallingObject)
-        {
-            float randomPositionX = Random.Range(_minX, _maxX);
-            Vector3 spawnPosition = new Vector3(randomPositionX, transform.position.y, 0f);
-            Instantiate(item, spawnPosition, Quaternion.identity);
-        }
-    }
 
+        int randomIndex = Random.Range(0, _fallingObject.Count);
+        GameObject selectedObject = _fallingObject[randomIndex];
+        SpriteRenderer selectedObjectSprite = selectedObject.GetComponent<SpriteRenderer>();
+        float objectSpriteHalthWidth = selectedObjectSprite.sprite.bounds.extents.x;
+        float randomPositionX = Random.Range(
+            _minX + objectSpriteHalthWidth,
+            _maxX - objectSpriteHalthWidth
+        );
+        Vector3 spawnPosition = new(randomPositionX, transform.position.y, 0f);
+        Instantiate(selectedObject, spawnPosition, Quaternion.identity);
+    }
 
     private float GetHalthWidthScreen(float aspect, float ortographicSize)
     {
