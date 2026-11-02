@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class FallingObjectSpawn : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _fallingObjectPrefabs;
     [SerializeField][Min(1)] private float _spawnInterval = 1f;
+    [SerializeField] private ScoreManager _scoreManager;
+    [SerializeField] private List<GameObject> _fallingObjectPrefabs;
     private float _minX;
     private float _maxX;
 
@@ -46,7 +47,13 @@ public class FallingObjectSpawn : MonoBehaviour
             _maxX - objectHalfWidth
         );
         Vector3 spawnPosition = new(randomPositionX, transform.position.y, 0f);
-        Instantiate(selectedPrefab, spawnPosition, Quaternion.identity);
+        GameObject spawnedObject = Instantiate(
+            selectedPrefab,
+            spawnPosition,
+            Quaternion.identity
+        );
+        FallingObject fallingObject = spawnedObject.GetComponent<FallingObject>();
+        fallingObject.Initialize(_scoreManager);
     }
 
     private float GetScreenHalfWidth(float aspect, float orthographicSize)
