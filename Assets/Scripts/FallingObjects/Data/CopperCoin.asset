@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FallingObjectData
   _fallSpeed: 3
   _points: 1
-  _spawnWeight: 10
+  _spawnWeight: 12

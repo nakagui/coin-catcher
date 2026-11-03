@@ -37,8 +37,7 @@ public class FallingObjectSpawn : MonoBehaviour
 
     private void Spawn()
     {
-        int randomIndex = Random.Range(0, _fallingObjectPrefabs.Count);
-        GameObject selectedPrefab = _fallingObjectPrefabs[randomIndex];
+        GameObject selectedPrefab = GetRandomWeightedPrefab();
         SpriteRenderer selectedObjectSprite = selectedPrefab.GetComponent<SpriteRenderer>();
         float objectHalfWidth = selectedObjectSprite.sprite.bounds.extents.x
             * Mathf.Abs(selectedPrefab.transform.localScale.x);
@@ -78,5 +77,71 @@ public class FallingObjectSpawn : MonoBehaviour
         float minX = camera.transform.position.x - halfWidth;
         float maxX = camera.transform.position.x + halfWidth;
         return (minX, maxX);
+    }
+
+    private GameObject GetRandomWeightedPrefab()
+    {
+        int totalWeight = 0;
+
+        foreach (GameObject prefab in _fallingObjectPrefabs)
+        {
+            if (prefab == null)
+            {
+                continue;
+            }
+
+            FallingObject fallingObject = prefab.GetComponent<FallingObject>();
+
+            if (fallingObject == null || fallingObject.Data == null)
+            {
+                continue;
+            }
+
+            int weight = fallingObject.Data.SpawnWeight;
+
+
+            if (weight > 0)
+            {
+                totalWeight += weight;
+            }
+        }
+
+        if (totalWeight == 0)
+        {
+            return null;
+        }
+
+        int randomWeight = Random.Range(0, totalWeight);
+
+        foreach (GameObject prefab in _fallingObjectPrefabs)
+        {
+            if (prefab == null)
+            {
+                continue;
+            }
+
+            FallingObject fallingObject = prefab.GetComponent<FallingObject>();
+
+            if (fallingObject == null || fallingObject.Data == null)
+            {
+                continue;
+            }
+
+            int weight = fallingObject.Data.SpawnWeight;
+
+            if (weight <= 0)
+            {
+                continue;
+            }
+
+            if (randomWeight < weight)
+            {
+                return prefab;
+            }
+
+            randomWeight -= weight;
+        }
+
+        return null;
     }
 }
